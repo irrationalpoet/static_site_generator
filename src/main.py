@@ -15,7 +15,6 @@ This is the same paragraph on a new line
 - This is a list
 - with items
 """
-    breakpoint()
     blocks = markdown_to_blocks(md)
     for b in blocks:
         print(b)

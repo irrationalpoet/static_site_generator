@@ -169,6 +169,7 @@ class TestInlineMarkdown(unittest.TestCase):
                 new_nodes
                 )
 
+class TestBlockMarkdown(unittest.TestCase):
     def test_markdown_to_blocks(self):
         md = """
 This is **bolded** paragraph
@@ -188,6 +189,78 @@ This is the same paragraph on a new line
                     "- This is a list\n- with items",
                     ],
                 )
+
+    def test_block_to_block_type_heading_single_pound(self):
+        md = "# This is a heading"
+        blocks = markdown_to_blocks(md)
+        heading = blocks[0]
+        is_heading = block_to_block_type(heading)
+        self.assertEqual(
+                is_heading,
+                BlockType.HEADING
+        )
+
+    def test_block_to_block_type_heading_multiple_pound(self):
+        md = "###### This is a heading"
+        blocks = markdown_to_blocks(md)
+        heading = blocks[0]
+        is_heading = block_to_block_type(heading)
+        self.assertEqual(
+                is_heading,
+                BlockType.HEADING
+        )
+
+    def test_block_to_block_type_code(self):
+        md = "```This is a code block```"
+        blocks = markdown_to_blocks(md)
+        code_block = blocks[0]
+        is_code_block = block_to_block_type(code_block)
+        self.assertEqual(
+                is_code_block,
+                BlockType.CODE
+        )
+
+    def test_block_to_block_type_quote(self):
+        md = """
+>I am a quote.
+>So I am.
+>Hey, me too!
+"""
+        blocks = markdown_to_blocks(md)
+        quote_block = blocks[0]
+        is_quote_block = block_to_block_type(quote_block)
+        self.assertEqual(
+                is_quote_block,
+                BlockType.QUOTE
+        )
+
+    def test_block_to_block_type_ulist(self):
+        md = """
+- Bacon
+- Ham
+- Eggs
+"""
+        blocks = markdown_to_blocks(md)
+        ulist_block = blocks[0]
+        is_ulist_block = block_to_block_type(ulist_block)
+        self.assertEqual(
+                is_ulist_block,
+                BlockType.UNORDERED_LIST
+        )
+    def test_block_to_block_type_olist(self):
+        md = """
+1. First comes love
+2. Then comes marriage
+3. Then comes a baby carriage
+4. Then comes divorce and a new wife
+"""
+        blocks = markdown_to_blocks(md)
+        olist_block = blocks[0]
+        is_olist_block = block_to_block_type(olist_block)
+        self.assertEqual(
+                is_olist_block,
+                BlockType.ORDERED_LIST
+        )
 
 if __name__ == "__main__":
     unittest.main()
